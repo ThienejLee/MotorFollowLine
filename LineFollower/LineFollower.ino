@@ -144,7 +144,7 @@ void loop()
   int derivative = dolech - last;
   int integral=+dolech;
   last = dolech;
-  int tocdo = dolech*1/2+derivative;
+  int tocdo = dolech*1/12+derivative*0.2 ;
   if ( tocdo > MAX_SPEED) {
     tocdo = MAX_SPEED;
   }
@@ -152,12 +152,12 @@ void loop()
     tocdo = -MAX_SPEED;
   }
   if (tocdo < 0) {
-    _kmotor.tien(0, MAX_SPEED+tocdo);
-    _kmotor.tien(1, MAX_SPEED);
+    _kmotor.tien(0, MAX_SPEED);
+    _kmotor.tien(1, MAX_SPEED+tocdo);
   }
   else {
-    _kmotor.tien(0, MAX_SPEED );
-    _kmotor.tien(1, MAX_SPEED-tocdo);
+    _kmotor.tien(0, MAX_SPEED-tocdo );
+    _kmotor.tien(1, MAX_SPEED);
   }
 
 }
