@@ -112,28 +112,56 @@ void XuLySoLo2() {
   }
 }
 
-int F[100][100];
-
-void xulySaveMove(){
-  
-}
-
 int count = 1;
 int ok = 0;
 int solve = 0;
+  /*
+   * left = 76
+   * right = 82
+   * up = 70
+   * reserve = 66
+   */
+void xulySaveMove(){
+     XuLySoLo1();
+           Serial.print("OK");
+    if(solve == 0){
+    while (saveMaze[1].encode > demSoLo1/2){
+         turn('U');
+         XuLySoLo1();
+    }   
+    Serial.println("Move");
+    solve = 1;
+    int des = 2;
+    while(des<=count){
+     Serial.println(saveMaze[des].side );      
+          
+         if(saveMaze[des].encode == demSoLo1/2){
+          XuLySoLo1();
+          turn(saveMaze[des].side);
+          if(saveMaze[des].side == 75 || saveMaze[des].side == 82){
+            delay(280);
+          } else if(saveMaze[des].side == 66)
+            delay(520);
+            des++;
+         } 
+          saveMaze[des].encode == demSoLo1/2;
+         
+      }
+    }
 
+}
 
 void loop() {
   
     XuLySoLo1();
-  if(ok == 0){
+  if(ok != 1234){
     state = 'o';
     if (Serial.available() > 0) {
       state = Serial.read();
       Serial.print(state);
     }
   
-    if(state!='0' && state != 'F' ){
+    if(state!='o' && state != 'F' ){
       if(count == 0){
         saveMaze[count].encode = demSoLo1/2;
         saveMaze[count].side = 'U';
@@ -174,32 +202,29 @@ void loop() {
     break;
       case 'S': {
           turn('S');
-          ok = 1;
+          ok = 1234;
+          demSoLo1 = 0;
+          Serial.println("dua xe ve maps");
           delay(5000);
+          
+          xulySaveMove();
           // delay 5s de bat dau nho duong di ve map
           // dat xe ve vi tri xuat phat.
     }
     break;
     }  
-  } else if (ok == 1){
-    if(solve == 0){
-    while (saveMaze[1].encode != demSoLo1/2){
-         turn('U');
-    }
-    solve = 1;
-      for (int des = 2; des <= count; des 
-      ++){
-         if(saveMaze[des].encode) == demSoLo1/2){
-          turn(sazeMaze[des].side);
-         } else turn('U');
-      }
-    }
-    
-    
-  }
+  
+  } 
   
 }
-void turn(int _move){
+void turn(char _move){
+  /*
+   * left = 76
+   * right = 82
+   * up = 70
+   * reserve = 66
+   */
+  
   switch(_move){
     case 'L': 
     lcd.setCursor(0, 1);   
