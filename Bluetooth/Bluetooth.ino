@@ -10,6 +10,15 @@ LiquidCrystal_I2C lcd(0x27, 20, 4);
 int state;
 kmotor _kmotor(true);
 
+struct Moto{
+  int encode;
+  char side;
+};
+
+struct Moto saveMaze[100];
+
+
+
 
 //ENCODER INIT
 float rpm1;
@@ -103,44 +112,92 @@ void XuLySoLo2() {
   }
 }
 
+int F[100][100];
+
+void xulySaveMove(){
+  
+}
+
+int count = 1;
+int ok = 0;
+int solve = 0;
+
+
 void loop() {
+  
     XuLySoLo1();
-  state = 'o';
-  if (Serial.available() > 0) {
-    state = Serial.read();
-    Serial.print(state);
-  }
-  switch (state) {
-   case 'F': {
-        turn('U');
+  if(ok == 0){
+    state = 'o';
+    if (Serial.available() > 0) {
+      state = Serial.read();
+      Serial.print(state);
+    }
+  
+    if(state!='0' && state != 'F' ){
+      if(count == 0){
+        saveMaze[count].encode = demSoLo1/2;
+        saveMaze[count].side = 'U';
+      } 
+      saveMaze[count].encode = demSoLo1/2;
+      saveMaze[count].side = state;
+      count++;
+      
+    }
+  
+    switch (state) {
+     case 'F': {
+          turn('U');
+        }
+    break;
+    case 'L': {
+       turn('L');
+       delay(280);
+      _kmotor.tien(0, 0);
+      _kmotor.tien(1, 0);     
+    }
+    break;
+    case 'R': {
+        turn('R');
+       delay(280);
+       _kmotor.tien(0, 0);
+      _kmotor.tien(1, 0);    
+    }
+    break;
+    case 'B': {
+       turn('B');
+       delay(520);
+      _kmotor.tien(0, 0);
+      _kmotor.tien(1, 0);     
+      // chayj dduowngf da luu 
+      
+    }
+    break;
+      case 'S': {
+          turn('S');
+          ok = 1;
+          delay(5000);
+          // delay 5s de bat dau nho duong di ve map
+          // dat xe ve vi tri xuat phat.
+    }
+    break;
+    }  
+  } else if (ok == 1){
+    if(solve == 0){
+    while (saveMaze[1].encode != demSoLo1/2){
+         turn('U');
+    }
+    solve = 1;
+      for (int des = 2; des <= count; des 
+      ++){
+         if(saveMaze[des].encode) == demSoLo1/2){
+          turn(sazeMaze[des].side);
+         } else turn('U');
       }
-  break;
-  case 'L': {
-     turn('L');
-     delay(280);
-    _kmotor.tien(0, 0);
-    _kmotor.tien(1, 0);     
+    }
+    
+    
   }
-  break;
-  case 'R': {
-      turn('R');
-     delay(280);
-     _kmotor.tien(0, 0);
-    _kmotor.tien(1, 0);    
-  }
-  break;
-  case 'B': {
-     turn('B');
-     delay(520);
-    _kmotor.tien(0, 0);
-    _kmotor.tien(1, 0);     
-  }
-  break;
-    case 'S': {
-        turn('S');
-  }
-  break;
-  }
+  
 }
 void turn(int _move){
   switch(_move){
@@ -175,6 +232,7 @@ void turn(int _move){
     lcd.print("Stop");
     _kmotor.tien(0, 0);
     _kmotor.tien(1, 0);
+    
     break;
   }
 }
