@@ -111,112 +111,6 @@ void XuLySoLo2() {
     attachInterrupt(digitalPinToInterrupt(PIN_DO2), counter2, FALLING);
   }
 }
-
-int count = 1;
-int ok = 0;
-int solve = 0;
-  /*
-   * left = 76
-   * right = 82
-   * up = 70
-   * reserve = 66
-   */
-void xulySaveMove(){
-     XuLySoLo1();
-           Serial.print("OK");
-    if(solve == 0){
-    while (saveMaze[1].encode > demSoLo1/2){
-         turn('U');
-         XuLySoLo1();
-    }   
-    Serial.println("Move");
-    solve = 1;
-    int des = 2;
-    while(des<=count){
-     Serial.println(saveMaze[des].side );      
-          
-         if(saveMaze[des].encode == demSoLo1/2){
-          XuLySoLo1();
-          turn(saveMaze[des].side);
-          if(saveMaze[des].side == 75 || saveMaze[des].side == 82){
-            delay(280);
-          } else if(saveMaze[des].side == 66)
-            delay(520);
-            des++;
-         } 
-          saveMaze[des].encode == demSoLo1/2;
-         
-      }
-    }
-
-}
-
-void loop() {
-  
-    XuLySoLo1();
-  if(ok != 1234){
-    state = 'o';
-    if (Serial.available() > 0) {
-      state = Serial.read();
-      Serial.print(state);
-    }
-  
-    if(state!='o' && state != 'F' ){
-      if(count == 0){
-        saveMaze[count].encode = demSoLo1/2;
-        saveMaze[count].side = 'U';
-      } 
-      saveMaze[count].encode = demSoLo1/2;
-      saveMaze[count].side = state;
-      count++;
-      
-    }
-  
-    switch (state) {
-     case 'F': {
-          turn('U');
-        }
-    break;
-    case 'L': {
-       turn('L');
-       delay(280);
-      _kmotor.tien(0, 0);
-      _kmotor.tien(1, 0);     
-    }
-    break;
-    case 'R': {
-        turn('R');
-       delay(280);
-       _kmotor.tien(0, 0);
-      _kmotor.tien(1, 0);    
-    }
-    break;
-    case 'B': {
-       turn('B');
-       delay(520);
-      _kmotor.tien(0, 0);
-      _kmotor.tien(1, 0);     
-      // chayj dduowngf da luu 
-      
-    }
-    break;
-      case 'S': {
-          turn('S');
-          ok = 1234;
-          demSoLo1 = 0;
-          Serial.println("dua xe ve maps");
-          delay(5000);
-          
-          xulySaveMove();
-          // delay 5s de bat dau nho duong di ve map
-          // dat xe ve vi tri xuat phat.
-    }
-    break;
-    }  
-  
-  } 
-  
-}
 void turn(char _move){
   /*
    * left = 76
@@ -260,4 +154,140 @@ void turn(char _move){
     
     break;
   }
+}
+int count = 1;
+int ok = 0;
+int solve = 0;
+  /*
+   * left = 76
+   * right = 82
+   * up = 70
+   * reserve = 66
+   */
+void xulySaveMove(){
+     XuLySoLo1();
+      
+
+
+          for (int i = 1; i<=count; i++){
+      Serial.print("count: ");
+      Serial.print(i);
+      Serial.print("\t encode: ");
+      Serial.print(saveMaze[i].encode);
+      Serial.print("\t side: ");
+      Serial.print(saveMaze[i].side);
+      Serial.println();
+      }
+    if(solve == 0){
+    while (saveMaze[3].encode > demSoLo1/2){
+         turn('U');
+         XuLySoLo1();
+    }   
+      _kmotor.tien(0, 0);
+      _kmotor.tien(1, 0);    
+    solve = 1;
+    int des = 2;
+    turn('B');
+    delay(520);
+      _kmotor.tien(0, 0);
+      _kmotor.tien(1, 0);    
+
+      
+      while(des<=count){    
+         if(saveMaze[des].encode == demSoLo1/2){
+          XuLySoLo1();
+          turn(saveMaze[des].side);
+          
+          if(saveMaze[des].side == 75 || saveMaze[des].side == 82){
+            delay(330);
+          } else if(saveMaze[des].side == 66)
+            delay(520);
+
+               des++;
+         } else {
+            while(saveMaze[des].encode != demSoLo1/2){
+              delay(10);
+              XuLySoLo1();
+           }
+         }
+                   
+         
+      }
+    }
+      _kmotor.tien(0, 0);
+      _kmotor.tien(1, 0);   
+}
+void loop() {
+  XuLySoLo1();
+  if(ok != 1234){
+    state = 'o';
+    if (Serial.available() > 0) {
+      state = Serial.read();
+      Serial.print(state);
+    }
+  
+    if(state!='o'){
+      if(count == 0){
+        saveMaze[count].encode = demSoLo1/2;
+        saveMaze[count].side = 'U';
+      } else{
+        saveMaze[count].encode = demSoLo1/2;
+        saveMaze[count].side = (state == 'F' ? saveMaze[count].side = 'U': saveMaze[count].side = state);
+        count++;
+      }
+    }
+  
+    switch (state) {
+     case 'F': {
+  
+          turn('U');
+        }
+    break;
+    case 'L': {
+       turn('L');
+       delay(330);
+      _kmotor.tien(0, 0);
+      _kmotor.tien(1, 0);     
+    }
+    break;
+    case 'R': {
+        turn('R');
+       delay(280);
+       _kmotor.tien(0, 0);
+      _kmotor.tien(1, 0);    
+    }
+    break;
+    case 'B': {
+       turn('B');
+       delay(520);
+      _kmotor.tien(0, 0);
+      _kmotor.tien(1, 0);     
+      // chayj dduowngf da luu 
+      
+    }
+    break;
+      case 'S': {
+          turn('S');
+          ok = 1234;
+          demSoLo1 = 0;
+          Serial.println();
+          Serial.println("dua xe ve map");
+          delay(5000);
+          
+          xulySaveMove();
+          // delay 5s de bat dau nho duong di ve map
+          // dat xe ve vi tri xuat phat.
+    }
+    break;
+    }  
+  
+  } 
+  Serial.print("count: ");
+  Serial.print(count);
+  Serial.print("\t encode: ");
+  Serial.print(saveMaze[count-1].encode);
+  Serial.print("\t side: ");
+  Serial.print(saveMaze[count-1].side);
+  
+  Serial.println();
 }
